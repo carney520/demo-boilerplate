@@ -6,6 +6,7 @@ gulp template - 编译jade模板(compile jade templates)
 gulp        - 执行以上任务(execute above tasks)
 gulp start  - 启用开发服务器(start dev server)
 gulp watch  - 监听并编译所有资源文件(watch all sources)
+gulp clean  - 清空部署目录
 gulp help   - 显示本信息(show current message)
 
 默认目录结构

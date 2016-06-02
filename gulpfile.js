@@ -13,13 +13,25 @@ var gulp       = require('gulp'),
     gulpCopy   = require('gulp-copy'),
     util       = require('gulp-util'),
     browserSync = require('browser-sync').create(),
+    reload      = browserSync.reload,
     fs          = require('fs'),
+    del         = require('del'),
+    helpers     = require('./.helpers'),  //帮助方法
     path        = require('path'), _ = path.join;
 
 var client="./client/",
     dest,              //项目输出目录
     isProduction,      //是否是生产模式
-    compress = false;  //是否启用压缩
+    compress = false,  //是否启用压缩
+    outputs = {        //输出资源目录
+      js: "js",
+      css: "css",
+      font: "fonts",
+      image: "images",
+      html: "pages",
+      clientTemplate: "js/tmpls"
+    };
+
 
 if(process.env.NODE_ENV==="production"){
   dest = "./production";
@@ -28,6 +40,9 @@ if(process.env.NODE_ENV==="production"){
   dest = "./dist";
   isProduction = false;
 }
+
+//initial helpers
+var $ = helpers(dest,outputs);
 
 /*
  * 
@@ -42,17 +57,17 @@ var sassOption = {
 };
 
 
-gulp.task('sass',['sprite'],function(){
+gulp.task('sass',function(){
   return gulp.src(_(client,"css/*.scss"))
     .pipe(sassLint())
     .pipe(sassLint.format())
     .pipe(sassLint.failOnError())
     .pipe(gulpif(!isProduction,sourcemaps.init()))
     .pipe(sass().on('error',sass.logError))                  //编译sass
-    .pipe(autoprefixer({browsers:['last 2 versions']}))      //添加厂商前缀
+    .pipe(autoprefixer({browsers:['last 4 versions']}))      //添加厂商前缀
     .pipe(gulpif(!isProduction,sourcemaps.write()))          //sourcemap
     .pipe(gulpif(compress,csso()))                           //压缩
-    .pipe(gulp.dest(_(dest,"css")))
+    .pipe(gulp.dest(_(dest,outputs.css)))
     .pipe(browserSync.stream());                             //browser-sync 注入
 });
 
@@ -69,19 +84,20 @@ gulp.task('sprite',function(){
       .pipe(sprite({
         imgName: "sprite.png",
         cssName: "_sprite.scss",
-        //imgPath:"css文件中的sprite图片路径",
+        imgPath: $.assets("sprite.png",_(dest,outputs.css)),
         padding:10,
       }));
-  spriteData.img.pipe(gulp.dest(_(client,"images")));
-  spriteData.css.pipe(gulp.dest(_(client,"css")));
+  spriteData.img.pipe(gulp.dest(_(dest,outputs.image)));
+  spriteData.css.pipe(gulp.dest(_(client,outputs.css)));
 });
 
 //sprite watch
 gulp.task('sprite:watch',function(){
   util.log(util.colors.green('正在监听sprite文件'));
-  return gulp.watch(_(client,"images/sprites/*.png"),["sprite"])
-  .on("changed",browserSync.reload);
+  return gulp.watch(_(client,"images/sprites/*.png"),["sprite"]);
 });
+
+gulp.task('sprite:watch:bs',['sprite'], reload);
 
 /*
  *
@@ -94,23 +110,23 @@ gulp.task('sprite:watch',function(){
 //copy images
 gulp.task('sync:images',function(){
   gulp.src(_(client,"images/*.*"))
-  .pipe(gulp.dest(_(dest,"images")));
+  .pipe(gulp.dest(_(dest,outputs.image)));
 });
 
 //copy css
 gulp.task('sync:css',function(){
   //copy css
   gulp.src(_(client,"css/vendor/*.*"))
-  .pipe(gulp.dest(_(dest,"css")));
+  .pipe(gulp.dest(_(dest,outputs.css)));
   //copy fonts
   gulp.src(_(client,"fonts/*"))
-  .pipe(gulp.dest(_(dest,"fonts")));
+  .pipe(gulp.dest(_(dest,outputs.font)));
 });
 
 //copy js
 gulp.task('sync:js',function(){
   gulp.src(_(client,"js/vendor/*.*"))
-  .pipe(gulp.dest(_(dest,"js")));
+  .pipe(gulp.dest(_(dest,outputs.js)));
 });
 
 gulp.task('sync',["sync:images","sync:css","sync:js"]);
@@ -120,6 +136,11 @@ gulp.task('sync:watch',function(){
   gulp.watch([_(client,"css/vendor/*.*"),_(client,"fonts/*")],['sync:css']);
   gulp.watch(_(client,"js/vendor/*.*"),['sync:js']);
 });
+
+gulp.task('sync:js:watch:bs',['sync:js'],reload);
+gulp.task('sync:css:watch:bs',['sync:css'],reload);
+gulp.task('sync:images:watch:bs',['sync:images'],reload);
+
 
 /*
  *
@@ -132,14 +153,17 @@ gulp.task('sync:watch',function(){
 gulp.task('template',function(){
   var locals = { //your locals
   }; 
-  var separateLocals = require("./.locals.js");
 
   gulp.src(_(client,"templates/*.jade"))
   .pipe(jade({
-    locals: Object.assign(locals,separateLocals),
+    locals: Object.assign(locals,$),
     pretty:true,
   }))
-  .pipe(gulp.dest(_(dest,"pages")));
+  .on('error',function(err){
+    util.log("jade error",err.message);
+    this.end();
+  })
+  .pipe(gulp.dest(_(dest,outputs.html)));
 });
 
 gulp.task('template:client',function(){
@@ -148,16 +172,16 @@ gulp.task('template:client',function(){
   .pipe(jade({
     client:true
   }))
-  .pipe(gulp.dest(_(dest,"js/tmpls")));
+  .pipe(gulp.dest(_(dest,outputs.clientTemplate)));
 });
 
 gulp.task('template:watch',function(){
   util.log(util.colors.green('正在监听模板文件'));
-  gulp.watch(_(client,"templates/*.jade"),['template'])
-    .on("changed",browserSync.reload);
-  gulp.watch(_(client,"templates/client/*.jade"),['template:client'])
-    .on("changed",browserSync.reload);
+  gulp.watch(_(client,"templates/**/*.jade"),['template']);
+  gulp.watch(_(client,"templates/client/*.jade"),['template:client']);
 });
+gulp.task('template:watch:bs',['template'],reload);
+gulp.task('template:client:watch:bs',['template:client'],reload);
 
 
 /*
@@ -171,17 +195,17 @@ gulp.task("coffee",function(){
   .pipe(gulpif(!isProduction,sourcemaps.init()))
   .pipe(coffeeLint())
   .pipe(coffeeLint.reporter())
-  .pipe(coffee())
+  .pipe(coffee().on('error', util.log))
   .pipe(gulpif(!isProduction,sourcemaps.write()))
   .pipe(gulpif(compress,uglify()))
-  .pipe(gulp.dest(_(dest,"js")));
+  .pipe(gulp.dest(_(dest,outputs.js)));
 });
 
 gulp.task("coffee:watch",function(){
   util.log(util.colors.green('正在监听coffee文件'));
-  return gulp.watch(_(client,"js/*.coffee"),['coffee'])
-    .on('changed',browserSync.reload);                    //刷新browser-sync
+  return gulp.watch(_(client,"js/*.coffee"),['coffee']);
 });
+gulp.task("coffee:watch:bs",["coffee"],reload);
 
 
 /*
@@ -189,7 +213,8 @@ gulp.task("coffee:watch",function(){
  * Dev server
  *
  */
-gulp.task("start",["coffee:watch","template:watch","sprite:watch"],function(){
+//首先执行任务再侦听任务
+gulp.task("start",["default"],function(){
   if(!isProduction){
     util.log(util.colors.green("正在启用开发服务器"));
     browserSync.init({
@@ -197,7 +222,13 @@ gulp.task("start",["coffee:watch","template:watch","sprite:watch"],function(){
         baseDir:dest
       }
     });
-    gulp.watch(_(client,"css/**/*.scss"),["sass"]);     //监听sass文件
+    gulp.watch(_(client,"images/sprites/*.png"),                ["sprite:watch:bs"]);
+    gulp.watch(_(client,"images/*.*"),                          ['sync:images:watch:bs']);
+    gulp.watch([_(client,"css/vendor/*.*"),_(client,"fonts/*")],['sync:css:watch:bs']);
+    gulp.watch(_(client,"js/vendor/*.*"),                       ['sync:js:watch:bs']);
+    gulp.watch(_(client,"templates/**/*.jade"),                 ['template:watch:bs']);
+    gulp.watch(_(client,"templates/client/*.jade"),             ['template:client:watch:bs']);
+    gulp.watch(_(client,"js/*.coffee"),                         ['coffee:watch:bs']);
   }else{
     util.log(util.colors.red("只能在开发模式中启用"));
   }
@@ -216,7 +247,7 @@ gulp.task('prevexec',function(){
 });
 
 //default task
-gulp.task('default',['prevexec','sass','sync','coffee','template','template:client'],function(){
+gulp.task('default',['prevexec','sprite','sass','sync','coffee','template','template:client'],function(){
   util.beep();
   util.log(util.colors.green("finished gulp...."));
 });
@@ -234,5 +265,12 @@ gulp.task('help',function(){
     }else{
       throw err;
     }
+  });
+});
+
+//clean
+gulp.task('clean',function(){
+  return del([_(dest,"/**/*")]).then(function(path){
+    util.log(util.colors.yellow("cleaning:\n" + path.join("\n") +"\nend ... "));
   });
 });
