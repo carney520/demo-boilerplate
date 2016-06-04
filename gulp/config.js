@@ -28,6 +28,7 @@ module.exports = {
     jadeClient: "templates/client/*.jade",
     coffee:     "js/*.coffee",
     sass:       "css/sass/*.@(scss|sass)",
+    sassVendor: "css/sass/vendor/*",
     sassWatch:  "css/sass/**/*"
   },
   /*********资源输出目录*******/

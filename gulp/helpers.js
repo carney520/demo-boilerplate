@@ -22,22 +22,15 @@ module.exports._dest   = _dest;
 //输入输出目录
 //inputs
 exports.src = {};
-for(var key in cfg.inputs){
-  exports.src[key] = _client(cfg.inputs[key]);
+for(var key in inputs){
+  exports.src[key] = _client(inputs[key]);
 }
 
 //outputs
-exports.dest = {
-  html:   _dest(outputs.html),
-  js:     _dest(outputs.js),
-  css:    _dest(outputs.css),
-  font:   _dest(outputs.font),
-  image:  _dest(outputs.image),
-  clientTemplate: _dest(outputs.clientTemplate),
-  sass:   _client("css")
-};
-
-
+exports.dest = {};
+for(var key in outputs){
+  exports.dest[key] = _dest(outputs[key]);
+}
 
 exports.log = util.log;
 exports.logGreen = function(message){
@@ -48,6 +41,8 @@ exports.logRed = function(message){
   util.log(util.colors.red(message));
 };
 
+
+//用于自动处理资源的相对路径
 exports.assets = function(src,from){
   var type = mime.lookup(src),to;
   from = from || join(cfg.dest,cfg.outputs.html);

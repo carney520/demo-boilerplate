@@ -1,6 +1,7 @@
-var gulp       = require('gulp'),
+var gulp   = require('gulp'),
     cfg    = require('../config'),
     _      = require('../helpers'),
+    path   = require('path'),
     sprite = require('gulp.spritesmith');
 
 
@@ -17,7 +18,7 @@ gulp.task('sprite',function(){
   var spriteData =  gulp.src(_.src.sprite)
       .pipe(sprite(spriteConfig));
   spriteData.img.pipe(gulp.dest(_.dest.image));
-  spriteData.css.pipe(gulp.dest(_.dest.sass));
+  spriteData.css.pipe(gulp.dest(path.dirname(_.src.sassVendor)));
 });
 
 //sprite watch
