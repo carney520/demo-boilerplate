@@ -19,7 +19,7 @@ gulp.task('default',['prevexec','sprite','sass','sync','coffee','template','temp
 
 //help message
 gulp.task('help',function(){
-  fs.readFile("./help","utf8",function(err,data){
+  fs.readFile("help","utf8",function(err,data){
     if(!err){
       util.log(data);
     }else{
@@ -30,7 +30,7 @@ gulp.task('help',function(){
 
 //clean
 gulp.task('clean',function(){
-  return del([path.join(_.dest,"/**/*")]).then(function(paths){
+  return del([path.join(cfg.dest,"/**/*")]).then(function(paths){
     util.log(util.colors.yellow("cleaning:\n" + paths.join("\n") +"\nend ... "));
   });
 });
