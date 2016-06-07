@@ -7,6 +7,7 @@
 + 使用gulp构建工作流
 + 开发目录与生成目录分离。生成目录是最后交予后端的目录
 + 所以在开发目录可以尽情的使用舒服的前端技术，比如sprite自动生成，模板,开发服务器，sass,autoprefixer等
++ 按目录划分模板(比如，新建一个以"_"为前缀的目录，如“tempaltes/_module/test.jade” 最终编译到目标目录为“pages/module/test.html”)
 
 #安装依赖
 ```

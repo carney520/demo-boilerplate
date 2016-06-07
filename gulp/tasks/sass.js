@@ -3,7 +3,7 @@
 * sass  编译
 *
 */
-var gulp       = require('gulp'),
+var gulp       = require('gulp-help')(require('gulp')),
     gulpif     = require('gulp-if'),
     sourcemaps = require('gulp-sourcemaps'),
     sass       = require('gulp-sass'),
@@ -15,12 +15,12 @@ var gulp       = require('gulp'),
     _          = require('../helpers');
 
 //sass option
-var sassOption = cfg.config.sass || {
+var sassOption = Object.assign({
   outputStyle: "expanded",
-};
+},cfg.config.sass);
 
 
-gulp.task('sass',function(){
+gulp.task('sass',_.helps.sass,function(){
   return gulp.src(_.src.sass)
     .pipe(sassLint())
     .pipe(sassLint.format())
@@ -35,7 +35,7 @@ gulp.task('sass',function(){
 });
 
 //sass watch
-gulp.task('sass:watch',function(){
+gulp.task('sass:watch',_.helps['sass:watch'],function(){
   _.logGreen('正在监听scss文件');
   return gulp.watch(_.src.sass,['sass']);
 });

@@ -1,7 +1,8 @@
-var gulp       = require('gulp'),
+var gulp       = require('gulp-help')(require('gulp')),
+    _          = require('../helpers'),
     util       = require('gulp-util');
 
 //watch
-gulp.task('watch',["sass:watch","sprite:watch","sync:watch","coffee:watch","template:watch"],function(){
+gulp.task('watch',_.helps.watch,["sass:watch","sprite:watch","sync:watch","coffee:watch","template:watch"],function(){
   util.log(util.colors.green("侦听文件成功...."));
 });

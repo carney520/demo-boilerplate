@@ -4,7 +4,7 @@
  *
  */
 
-var gulp       = require('gulp'),
+var gulp       = require('gulp-help')(require('gulp')),
     gulpif     = require('gulp-if'),
     sourcemaps = require('gulp-sourcemaps'),
     coffee     = require('gulp-coffee'),
@@ -13,9 +13,9 @@ var gulp       = require('gulp'),
     cfg        = require('../config'),
     _          = require('../helpers');
 
-var coffeeConfig = {};
+var coffeeConfig = Object.assign({},cfg.config.coffee);
 
-gulp.task("coffee",function(){
+gulp.task("coffee",_.helps.coffee,function(){
   return gulp.src(_.src.coffee)
   .pipe(gulpif(!cfg.isProduction,sourcemaps.init()))
   .pipe(coffeeLint())
@@ -26,7 +26,7 @@ gulp.task("coffee",function(){
   .pipe(gulp.dest(_.dest.js));
 });
 
-gulp.task("coffee:watch",function(){
+gulp.task("coffee:watch",_.helps['coffee:watch'],function(){
   _.logGreen('正在监听coffee文件');
   return gulp.watch(_.src.coffee,['coffee']);
 });

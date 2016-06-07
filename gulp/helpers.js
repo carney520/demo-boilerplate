@@ -22,9 +22,20 @@ module.exports._dest   = _dest;
 //输入输出目录
 //inputs
 exports.src = {};
-for(var key in inputs){
-  exports.src[key] = _client(inputs[key]);
-}
+(function(){
+  for(var key in inputs){
+    var src;
+    if(Array.isArray(inputs[key])){
+      src = [];
+      for(var i = 0; i < inputs[key].length; i++){
+        src[i] = _client(inputs[key][i]);
+      }
+    }else{
+      src = _client(inputs[key]);
+    }
+    exports.src[key] = src;
+  }
+})();
 
 //outputs
 exports.dest = {};
@@ -32,6 +43,8 @@ for(var key in outputs){
   exports.dest[key] = _dest(outputs[key]);
 }
 
+//help message
+exports.helps = require("./help_message");
 exports.log = util.log;
 exports.logGreen = function(message){
   util.log(util.colors.green(message));

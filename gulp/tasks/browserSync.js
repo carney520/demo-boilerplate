@@ -4,34 +4,34 @@
  *
  */
 
-var gulp        = require('gulp'),
+var gulp        = require('gulp-help')(require('gulp')),
     browserSync = require('browser-sync').create(),
     reload      = browserSync.reload,
     cfg    = require("../config"),
     _      = require('../helpers');
 
 
-var serverConfig = {
+var serverConfig = Object.assign({
   server:{
     baseDir: cfg.dest
   }
-};
+},cfg.config.server);
 
 exports.browserSync = browserSync;
 exports.reload      = reload;
 
-gulp.task('sprite:watch:bs',         ['sprite'], reload);
+gulp.task('sprite:watch:bs',         false,['sprite'], reload);
 
-gulp.task('sync:js:watch:bs',        ['sync:js'],reload);
-gulp.task('sync:css:watch:bs',       ['sync:css'],reload);
-gulp.task('sync:images:watch:bs',    ['sync:images'],reload);
-gulp.task('template:watch:bs',       ['template'],reload);
-gulp.task('template:client:watch:bs',['template:client'],reload);
+gulp.task('sync:js:watch:bs',        false,['sync:js'],reload);
+gulp.task('sync:css:watch:bs',       false,['sync:css'],reload);
+gulp.task('sync:images:watch:bs',    false,['sync:images'],reload);
+gulp.task('template:watch:bs',       false,['template'],reload);
+gulp.task('template:client:watch:bs',false,['template:client'],reload);
 
-gulp.task("coffee:watch:bs",         ["coffee"],reload);
+gulp.task("coffee:watch:bs",         false,["coffee"],reload);
 
 //首先执行任务再侦听任务
-gulp.task("start",["default"],function(){
+gulp.task("start",_.helps.server,["default"],function(){
   if(!cfg.isProduction){
     _.logGreen("正在启用开发服务器");
     browserSync.init(serverConfig);

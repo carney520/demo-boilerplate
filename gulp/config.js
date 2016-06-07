@@ -23,8 +23,8 @@ module.exports = {
     cssVendor:  "css/vendor/*",
     fonts:      "fonts/*",
     jsVendor:   "js/vendor/*",
-    jade:       "templates/*.jade",
-    jadeWatch:  "templates/**/*.jade",
+    jade:       ["templates/_*/*.jade","templates/*.jade"],           // 以“_”开始的目录将单独输出，比如 "_page1/test.jade" 在dist中输出为 page1/test.html
+    jadeWatch:  ["templates/**/*.jade","!templates/client/*.jade"],
     jadeClient: "templates/client/*.jade",
     coffee:     "js/*.coffee",
     sass:       "css/sass/*.@(scss|sass)",
