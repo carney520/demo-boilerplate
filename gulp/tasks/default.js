@@ -15,7 +15,7 @@ gulp.task('info',_.helps.info,function(){
 //default task
 gulp.task('default',_.helps.default,function(){
   runSequence('info','clean','sprite',
-              ['sass','coffee','template','template:client'],
+              ['sass','babel','template','template:client'],
               'sync',
               function(){
                 util.beep();

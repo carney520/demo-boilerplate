@@ -1,6 +1,6 @@
 /*
  *
- * JS
+ * coffee JS
  *
  */
 
@@ -30,4 +30,3 @@ gulp.task("coffee:watch",_.helps['coffee:watch'],function(){
   _.logGreen('正在监听coffee文件');
   return gulp.watch(_.src.coffee,['coffee']);
 });
-
