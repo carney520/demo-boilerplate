@@ -27,8 +27,8 @@ module.exports = {
     jadeWatch:  ["templates/**/*.jade", "!templates/client/*.jade"],
     jadeClient: "templates/client/*.jade",
     coffee:     "js/*.coffee",
-    js:         "js/*.js",
-    sass:       "css/sass/*.@(scss|sass)",
+    js:         "js/**/*.js",
+    sass:       "css/sass/**/*.@(scss|sass)",
     sassVendor: "css/sass/vendor/*",
     sassWatch:  "css/sass/**/*"
   },
@@ -43,5 +43,8 @@ module.exports = {
   },
   /**********插件配置*********/
   config: {
+    sass: {
+      includePaths: path.dirname(require.resolve('sassbean')),
+    }
   }
 };

@@ -56,9 +56,10 @@ exports.logRed = function(message){
 
 
 //用于自动处理资源的相对路径
-exports.assets = function(src,from){
+exports.assets = function(src, from){
   var type = mime.lookup(src),to;
-  from = from || join(cfg.dest,cfg.outputs.html);
+  from = from || join(cfg.dest, cfg.outputs.html);
+
   if(type === "application/javascript"){
     to = join(cfg.dest,cfg.outputs.js);
   }else if(type === "text/css"){
@@ -70,5 +71,5 @@ exports.assets = function(src,from){
   }else{
     throw "unknown type of source: " + type;
   }
-  return join(path.relative(from,to),src);
+  return join(path.relative(from,to), src);
 };

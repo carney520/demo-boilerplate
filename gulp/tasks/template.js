@@ -15,13 +15,13 @@ var gulp       = require('gulp-help')(require('gulp')),
 /*   配置   */
 
 //渲染变量
-var locals = { 
-}; 
+var locals = {
+};
 
 var jadeConfig = Object.assign({
   normal: {
     locals: Object.assign(locals,_),
-    pretty:true,
+    pretty: true,
   },
   client: {
     client:true
@@ -56,4 +56,3 @@ gulp.task('template:watch',_.helps['template:watch'],function(){
   gulp.watch(_.src.jadeWatch, ['template']);
   gulp.watch(_.src.jadeClient,['template:client']);
 });
-
