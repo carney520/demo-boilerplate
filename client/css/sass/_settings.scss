@@ -1,0 +1,34 @@
+/// 调色盘, 语义化命名颜色
+// 网站可能有多套主题,在这里统一声明
+// ⚠️sass-helper 会维护一个`$global-palette` 全局变量，所有组件都应该依赖$global-palette来配色
+@include add-theme(default, (
+    primary: #00B6D7,
+    secondary: #32607a,
+    success: #3adb76,
+    warning: #d56832,
+    alert: #ec5840,
+  )
+);
+
+// 所有组件都将使用这个全局配色, 已经隐式声明
+// @type Map
+// $global-palette: get-default-theme() !default;
+
+/// 默认颜色
+$global-primary:   map-get($global-palette,  primary ) !default;
+$global-secondary: map-get($global-palette,  secondary ) !default;
+$global-success:   map-get($global-palette,  success ) !default;
+$global-warning:   map-get($global-palette,  warning ) !default;
+$global-alert:     map-get($global-palette,  alert ) !default;
+
+
+///灰度模式
+$lightest-gray: #f7f7f9 !default;
+$lighter-gray:  #eceeef !default;
+$light-gray:    #dadada !default;
+$medium-gray:   #cacaca !default;
+$dark-gray:     #8a8a8a !default;
+$black:         #0a0a0a !default;
+$white:         #fefefe !default;
+
+$combined-style-modifier: true

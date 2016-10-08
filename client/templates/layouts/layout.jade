@@ -1,0 +1,22 @@
+//- template
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="initial-scale=1, maximum-scale=1")
+    link(rel="shortcut icon", href="/favicon.ico")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black")
+    // delete me
+    block base
+      //- 适用于二级目录
+      base(href="../")
+    link(rel="stylesheet", href=assets('main.css'))
+    link(rel="stylesheet", href=assets('vendor/ionicons.css'))
+    block style
+    title
+      block title
+  body
+    block content
+    block script
