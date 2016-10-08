@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development gulp start",
-    "build": "cross-env NODE_ENV=production gulp",
+    "build": "cross-env NODE_ENV=production gulp"
   },
   "author": "",
   "license": "ISC",
@@ -41,7 +41,5 @@
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.1",
     "sassbean": "0.0.7"
-  },
-  "dependencies": {
   }
 }
