@@ -14,7 +14,7 @@ gulp.task('info',_.helps.info,function(){
 
 //default task
 gulp.task('default',_.helps.default,function(){
-  runSequence('info','clean','sprite',
+  runSequence('info','clean','sprite', /*'svg-sprite',*/ 'iconfont',
               ['sass','babel','template','template:client'],
               'sync',
               function(){

@@ -6,6 +6,8 @@ var gulp       = require('gulp-help')(require('gulp')),
 gulp.task('watch', _.helps.watch, [
   "sass:watch",
   "sprite:watch",
+  // "svg-sprite:watch",
+  'iconfont:watch',
   "sync:watch",
   "js:watch",
   "template:watch"],

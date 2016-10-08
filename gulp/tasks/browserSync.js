@@ -21,6 +21,8 @@ exports.browserSync = browserSync;
 exports.reload      = reload;
 
 gulp.task('sprite:watch:bs',         false,['sprite'], reload);
+gulp.task('svg-sprite:watch:bs',     false, ['svg-sprite'], reload);
+gulp.task('iconfont:watch:bs',       false, ['iconfont'], reload);
 
 gulp.task('sync:js:watch:bs',        false,['sync:js'],reload);
 gulp.task('sync:css:watch:bs',       false,['sync:css'],reload);
@@ -39,6 +41,8 @@ gulp.task("start",_.helps.server,["default"],function(){
 
     gulp.watch(_.src.sass, ['sass']);
     gulp.watch(_.src.sprite,                ["sprite:watch:bs"]);
+    // gulp.watch(_.src.svgSprite,             ["svg-sprite:watch:bs"]);
+    gulp.watch(_.src.svgSprite,             ["iconfont:watch:bs"]);
     gulp.watch(_.src.images,                ['sync:images:watch:bs']);
     gulp.watch([_.src.cssVendor,_.src.fonts],['sync:css:watch:bs']);
     gulp.watch(_.src.jsVendor,              ['sync:js:watch:bs']);

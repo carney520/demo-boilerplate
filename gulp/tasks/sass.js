@@ -1,4 +1,4 @@
-/* 
+/*
 *
 * sass  编译
 *
@@ -17,16 +17,17 @@ var gulp       = require('gulp-help')(require('gulp')),
 //sass option
 var sassOption = Object.assign({
   outputStyle: "expanded",
-},cfg.config.sass);
+}, cfg.config.sass);
+
 
 
 gulp.task('sass',_.helps.sass,function(){
   return gulp.src(_.src.sass)
-    .pipe(sassLint())
-    .pipe(sassLint.format())
-    .pipe(sassLint.failOnError())
+    // .pipe(sassLint())
+    // .pipe(sassLint.format())
+    // .pipe(sassLint.failOnError())
     .pipe(gulpif(!cfg.isProduction,sourcemaps.init()))
-    .pipe(sass().on('error',sass.logError))                  //编译sass
+    .pipe(sass(sassOption).on('error',sass.logError))                  //编译sass
     .pipe(autoprefixer({browsers:['last 2 versions','ie >= 9','and_chr >= 2.3']}))      //添加厂商前缀
     .pipe(gulpif(!cfg.isProduction,sourcemaps.write()))          //sourcemap
     .pipe(gulpif(cfg.compress,csso()))                           //压缩
