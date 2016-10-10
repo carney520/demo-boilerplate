@@ -25,10 +25,10 @@ module.exports = {
     svgSprite:  "images/sprites/*.svg",
 
     // static
-    images:     "images/*.*",
+    images:     ["images/**/*", "!images/sprites/*"],
     fonts:      "fonts/*",
     jsVendor:   "js/vendor/*.js",
-    cssVendor:  "css/vendor/*.css",
+    cssVendor:  "css/vendor/*",
 
     // 以“_”开始的目录将单独输出，比如 "_page1/test.jade" 在dist中输出为 page1/test.html
     jade:       ["templates/_*/*.jade", "templates/*.jade"],          
